@@ -35,7 +35,17 @@ export default {
   },
   list: async (req, res, next) => {
     try {
-      const reg = await models.Category.find({});
+      let value = req.query.value;
+
+      const reg = await models.Category.find(
+        {
+          $or: [
+            { name: new RegExp(value, "i") },
+            { description: new RegExp(value, "i") }
+          ]
+        },
+        { create_at: 0 }
+      );
 
       res.status(200).json(reg);
     } catch (e) {
@@ -53,7 +63,7 @@ export default {
         { name: req.body.name, description: req.body.description }
       );
 
-      es.status(200).json(reg);
+      res.status(200).json(reg);
     } catch (e) {
       res.status(500).send({
         message: "Internal server error"
