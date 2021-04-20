@@ -3,7 +3,7 @@ import models from "../../models";
 export default {
   add: async (req, res, next) => {
     try {
-      const reg = await models.Category.create(req.body);
+      const reg = await models.Article.create(req.body);
 
       res.status(200).json(reg);
     } catch (e) {
@@ -16,7 +16,9 @@ export default {
   },
   query: async (req, res, next) => {
     try {
-      const reg = await models.Category.findOne({ _id: req.query._id });
+      const reg = await models.Article.findOne({
+        _id: req.query._id
+      }).populate("category", { name: 1 });
 
       if (!reg) {
         res.status(404).send({
@@ -37,7 +39,7 @@ export default {
     try {
       let value = req.query.value;
 
-      const reg = await models.Category.find(
+      const reg = await models.Article.find(
         {
           $or: [
             { name: new RegExp(value, "i") },
@@ -45,7 +47,9 @@ export default {
           ]
         },
         { created_at: 0 }
-      ).sort({ created_at: -1 });
+      )
+        .populate("category", { name: 1 })
+        .sort({ created_at: -1 });
 
       res.status(200).json(reg);
     } catch (e) {
@@ -58,9 +62,16 @@ export default {
   },
   update: async (req, res, next) => {
     try {
-      const reg = await models.Category.findByIdAndUpdate(
+      const reg = await models.Article.findByIdAndUpdate(
         { _id: req.body._id },
-        { name: req.body.name, description: req.body.description }
+        {
+          category: req.body.category,
+          code: req.body.code,
+          name: req.body.name,
+          description: req.body.description,
+          sale_price: req.body.sale_price,
+          stock: req.body.stock
+        }
       );
 
       res.status(200).json(reg);
@@ -74,7 +85,7 @@ export default {
   },
   remove: async (req, res, next) => {
     try {
-      const reg = await models.Category.findByIdAndDelete({
+      const reg = await models.Article.findByIdAndDelete({
         _id: req.body._id
       });
 
@@ -89,7 +100,7 @@ export default {
   },
   enable: async (req, res, next) => {
     try {
-      const reg = await models.Category.findByIdAndUpdate(
+      const reg = await models.Article.findByIdAndUpdate(
         { _id: req.body._id },
         { state: 1 }
       );
@@ -105,7 +116,7 @@ export default {
   },
   disable: async (req, res, next) => {
     try {
-      const reg = await models.Category.findByIdAndUpdate(
+      const reg = await models.Article.findByIdAndUpdate(
         { _id: req.body._id },
         { state: 0 }
       );
