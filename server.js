@@ -9,7 +9,7 @@ import router from "./routes";
 mongoose.Promise = global.Promise;
 const DB_URL = "mongodb://localhost:27017/sales-system";
 mongoose
-  .connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(() => {
     console.info("Conectado a MongoDB");
   })

@@ -4,7 +4,7 @@ const categorySchema = new Schema({
   name: { type: String, maxlength: 50, unique: true, required: true },
   description: { type: String, maxlength: 255 },
   state: { type: Number, default: 1},
-  create_at: { type: Number, default: Date.now }
+  created_at: { type: Date, default: Date.now }
 });
 
 const Category = mongoose.model("category", categorySchema);
