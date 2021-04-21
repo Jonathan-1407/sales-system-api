@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 export default {
   add: async (req, res, next) => {
     try {
-      req.body.password = await bcrypt(req.body.password, 10);
+      req.body.password = await bcrypt.hash(req.body.password, 10);
       const reg = await models.User.create(req.body);
 
       res.status(200).json(reg);
@@ -66,7 +66,7 @@ export default {
       const _reg = await models.User.findOne({ _id: req.body._id });
 
       if (password != _reg.password) {
-        req.body.password = await bcrypt(req.body.password, 10);
+        req.body.password = await bcrypt.hash(req.body.password, 10);
       }
       const reg = await models.User.findByIdAndUpdate(
         { _id: req.body._id },
@@ -130,6 +130,31 @@ export default {
       );
 
       res.status(200).json(reg);
+    } catch (e) {
+      res.status(500).send({
+        message: "Internal server error"
+      });
+
+      next(e);
+    }
+  },
+  login: async (req, res, next) => {
+    try {
+      let user = await models.User.findOne({ email: req.body.email });
+
+      if (user) {
+        let match = await bcrypt.compare(req.body.password, user.password);
+
+        if (match) {
+          res.status(200).json("User Correct");
+        } else {
+          res.status(404).json("Thes credentials do not match ours");
+        }
+      } else {
+        res.status(404).send({
+          message: "Thes credentials do not match ours"
+        });
+      }
     } catch (e) {
       res.status(500).send({
         message: "Internal server error"

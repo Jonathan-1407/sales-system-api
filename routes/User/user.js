@@ -10,5 +10,6 @@ router.put("/update", userController.update);
 router.delete("/remove", userController.remove);
 router.put("/enable", userController.enable);
 router.put("/disable", userController.disable);
+router.post("/login", userController.login);
 
 export default router;

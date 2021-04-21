@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const userSchema = new Schema({
-  rol: { type: String, maxlength: 30, required: true },
+  role: { type: String, maxlength: 30, required: true },
   name: { type: String },
   document_type: { type: String, maxlength: 20 },
   document_number: { type: String, maxlength: 20 },
