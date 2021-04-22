@@ -1,5 +1,6 @@
 import models from "../../models";
 import bcrypt from "bcryptjs";
+import token from "../../services/JWT/token";
 
 export default {
   add: async (req, res, next) => {
@@ -140,13 +141,14 @@ export default {
   },
   login: async (req, res, next) => {
     try {
-      let user = await models.User.findOne({ email: req.body.email });
+      let user = await models.User.findOne({ email: req.body.email, state: 1 });
 
       if (user) {
         let match = await bcrypt.compare(req.body.password, user.password);
 
         if (match) {
-          res.status(200).json("User Correct");
+          let _token = await token.encode(user._id);
+          res.status(200).json({ user, _token });
         } else {
           res.status(404).json("Thes credentials do not match ours");
         }
