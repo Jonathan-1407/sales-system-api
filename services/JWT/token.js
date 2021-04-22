@@ -32,7 +32,7 @@ export default {
 
     return token;
   },
-  decode: async _id => {
+  decode: async token => {
     try {
       const { _id } = await jwt.verify(token, "sales-system-api");
       const user = await models.User.findOne({ _id, state: 1 });
