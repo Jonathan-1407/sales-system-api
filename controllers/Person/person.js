@@ -40,24 +40,24 @@ export default {
       let type = req.query.type;
       let value = req.query.value;
 
+      let reg = await models.Person.find(
+        {
+          $or: [
+            { name: new RegExp(value, "i") },
+            { email: new RegExp(value, "i") }
+          ]
+        },
+        { created_at: 0 }
+      ).sort({ created_at: -1 });
+
       if (type != "") {
-        const reg = await models.Person.find(
+        reg = await models.Person.find(
           {
             $or: [
               { name: new RegExp(value, "i") },
               { email: new RegExp(value, "i") }
             ],
             person_type: type
-          },
-          { created_at: 0 }
-        ).sort({ created_at: -1 });
-      } else {
-        const reg = await models.Person.find(
-          {
-            $or: [
-              { name: new RegExp(value, "i") },
-              { email: new RegExp(value, "i") }
-            ]
           },
           { created_at: 0 }
         ).sort({ created_at: -1 });
@@ -83,7 +83,7 @@ export default {
           document_number: req.body.document_number,
           address: req.body.address,
           phone: req.body.phone,
-          email: req.body.email,
+          email: req.body.email
         }
       );
 
