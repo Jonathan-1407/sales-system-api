@@ -3,6 +3,7 @@ import userRouter from "./User/user";
 import personRouter from "./Person/person";
 import categoryRouter from "./Category/category";
 import articleRouter from "./Article/article";
+import entryRouter from "./Purchases/Entry/entry";
 
 const router = routerx();
 
@@ -10,5 +11,6 @@ router.use("/user", userRouter);
 router.use("/person", personRouter);
 router.use("/category", categoryRouter);
 router.use("/article", articleRouter);
+router.use("/purchases/entry", entryRouter);
 
 export default router;
