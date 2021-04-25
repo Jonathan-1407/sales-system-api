@@ -21,7 +21,7 @@ async function decreaseStock(_id, amount) {
 export default {
   add: async (req, res, next) => {
     try {
-      const reg = await models.Entry.create(req.body);
+      const reg = await models.Sale.create(req.body);
 
       /* Update Stock */
       let details = req.body.details;
@@ -40,7 +40,7 @@ export default {
   },
   query: async (req, res, next) => {
     try {
-      const reg = await models.Entry.findOne({ _id: req.query._id })
+      const reg = await models.Sale.findOne({ _id: req.query._id })
         .populate("user", { name: 1 })
         .populate("person", { name: 1 });
 
@@ -63,12 +63,14 @@ export default {
     try {
       let value = req.query.value;
 
-      const reg = await models.Entry.find({
-        $or: [
-          { voucher_number: new RegExp(value, "i") },
-          { voucher_series: new RegExp(value, "i") }
-        ]
-      })
+      const reg = await models.Sale.find(
+        {
+          $or: [
+            { voucher_number: new RegExp(value, "i") },
+            { voucher_series: new RegExp(value, "i") }
+          ]
+        }
+      )
         .populate("user", { name: 1 })
         .populate("person", { name: 1 })
         .sort({ created_at: -1 });
@@ -84,7 +86,7 @@ export default {
   },
   approve: async (req, res, next) => {
     try {
-      const reg = await models.Entry.findByIdAndUpdate(
+      const reg = await models.Sale.findByIdAndUpdate(
         { _id: req.body._id },
         { state: 1 }
       );
@@ -92,7 +94,7 @@ export default {
       /* Update Stock */
       let details = reg.details;
       details.map(item => {
-        increaseStock(item._id, item.amount);
+        decreaseStock(item._id, item.amount);
       });
 
       res.status(200).json(reg);
@@ -106,7 +108,7 @@ export default {
   },
   cancel: async (req, res, next) => {
     try {
-      const reg = await models.Entry.findByIdAndUpdate(
+      const reg = await models.Sale.findByIdAndUpdate(
         { _id: req.body._id },
         { state: 0 }
       );
@@ -114,7 +116,7 @@ export default {
       /* Update Stock */
       let details = reg.details;
       details.map(item => {
-        decreaseStock(item._id, item.amount);
+        increaseStock(item._id, item.amount);
       });
 
       res.status(200).json(reg);
