@@ -35,6 +35,27 @@ export default {
       next(e);
     }
   },
+  search: async (req, res, next) => {
+    try {
+      const reg = await models.Article.findOne({
+        code: req.query.code
+      }).populate("category", { name: 1 });
+
+      if (!reg) {
+        res.status(404).send({
+          message: "The requested record does not exist"
+        });
+      } else {
+        res.status(200).json(reg);
+      }
+    } catch (e) {
+      res.status(500).send({
+        message: "Internal server error"
+      });
+
+      next(e);
+    }
+  },
   list: async (req, res, next) => {
     try {
       let value = req.query.value;
