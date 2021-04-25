@@ -11,7 +11,7 @@ const DB_URL = "mongodb://localhost:27017/sales-system";
 mongoose
   .connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(() => {
-    console.info("Conectado a MongoDB");
+    console.info("Conected to MongoDB");
   })
   .catch(error => {
     console.error(error);

@@ -8,7 +8,7 @@ const saleSchema = new Schema({
   voucher_number: { type: String, maxlength: 10, required: true },
   tax: { type: Number, required: true },
   total: { type: Number, required: true },
-  detalles: [
+  details: [
     {
       _id: {
         type: String,
