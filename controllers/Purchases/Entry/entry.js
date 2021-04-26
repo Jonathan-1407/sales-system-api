@@ -125,5 +125,35 @@ export default {
 
       next(e);
     }
+  },
+  last_year_chart: async (req, res, next) => {
+    try {
+      const reg = await models.Entry.aggregate([
+        {
+          $group: {
+            _id: {
+              month: { $month: "$created_at" },
+              year: { $year: "$created_at" }
+            },
+            total: { $sum: "$total" },
+            number: { $sum: 1 }
+          }
+        },
+        {
+          $sort: {
+            "_id.year": -1,
+            "_id.month": -1
+          }
+        }
+      ]).limit(12);
+
+      res.status(200).json(reg);
+    } catch (e) {
+      res.status(500).send({
+        message: "Ocurrio un error"
+      });
+
+      next(e);
+    }
   }
 };
