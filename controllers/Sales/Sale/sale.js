@@ -150,7 +150,28 @@ export default {
       res.status(200).json(reg);
     } catch (e) {
       res.status(500).send({
-        message: "Ocurrio un error"
+        message: "Internal server error"
+      });
+
+      next(e);
+    }
+  },
+  search_between_dates: async (req, res, next) => {
+    try {
+      let start = req.body.start;
+      let end = req.body.end;
+
+      const reg = await models.Sale.find({
+        created_at: { $gte: start, $lt: end }
+      })
+        .populate("user", { name: 1 })
+        .populate("person", { name: 1 })
+        .sort({ created_at: -1 });
+
+      res.status(200).json(reg);
+    } catch (e) {
+      res.status(500).send({
+        message: "Internal server error"
       });
 
       next(e);

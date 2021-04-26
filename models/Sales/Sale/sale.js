@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const saleSchema = new Schema({
-  user: { type: Schema.ObjectId, ref: "users", required: true },
+  user: { type: Schema.ObjectId, ref: "user", required: true },
   person: { type: Schema.ObjectId, ref: "person", required: true },
   voucher_type: { type: String, maxlength: 20, required: true },
   voucher_series: { type: String, maxlength: 7 },
