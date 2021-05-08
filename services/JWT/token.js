@@ -25,10 +25,14 @@ async function checkToken(token) {
 }
 
 export default {
-  encode: async _id => {
-    const token = jwt.sign({ _id: _id }, "sales-system-api", {
-      expiresIn: "1d"
-    });
+  encode: async (_id, role, email) => {
+    const token = jwt.sign(
+      { _id: _id, role: role, email: email },
+      "sales-system-api",
+      {
+        expiresIn: "1d"
+      }
+    );
 
     return token;
   },

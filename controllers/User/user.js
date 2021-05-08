@@ -147,7 +147,7 @@ export default {
         let match = await bcrypt.compare(req.body.password, user.password);
 
         if (match) {
-          let _token = await token.encode(user._id);
+          let _token = await token.encode(user._id, user.role, user.email);
           res.status(200).json({ user, _token });
         } else {
           res.status(404).json("Thes credentials do not match ours");
